@@ -1,10 +1,10 @@
 <div align="center">
   <img src="https://grow.empress.eco/uploads/default/original/2X/1/1f1e1044d3864269d2a613577edb9763890422ab.png" alt="Project Logo" />
-</div>
 
-Welcome to Python Server Client, a powerful and efficient tool designed to streamline server-client communications in Python. This tool simplifies the management of your API requests, whether you're working with token-based or session-based authentication.
+  Welcome to Python Server Client, a powerful and efficient tool designed to streamline server-client communications in Python. This tool simplifies the management of your API requests, whether you're working with token-based or session-based authentication.
 
 Explore the [documentation](https://grow.empress.eco/) for a more detailed understanding of the project. If you encounter any bugs or want to request a feature, please do so [here](https://github.com/empress-eco/python_server_client/issues).
+</div>
 
 ## About Python Server Client
 
