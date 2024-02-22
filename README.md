@@ -1,142 +1,76 @@
-# Py-Frappe-Client
+<div align="center">
+  <img src="https://grow.empress.eco/uploads/default/original/2X/1/1f1e1044d3864269d2a613577edb9763890422ab.png" alt="Project Logo" />
+</div>
 
-## Install
+Welcome to Python Server Client, a powerful and efficient tool designed to streamline server-client communications in Python. This tool simplifies the management of your API requests, whether you're working with token-based or session-based authentication.
 
+Explore the [documentation](https://grow.empress.eco/) for a more detailed understanding of the project. If you encounter any bugs or want to request a feature, please do so [here](https://github.com/empress-eco/python_server_client/issues).
+
+## About Python Server Client
+
+Python Server Client is designed to simplify the communication process between servers and clients, offering an efficient way to handle authentication and enabling easy invocation of GET and POST endpoints. With built-in support for fetching single or multiple resources via the Documents API and Pagination API, this tool is an essential for Python developers looking to save time and reduce code complexity.
+
+### Key Features
+
+- Supports both Token-based and Session-based authentication.
+- Simplified invocation of GET and POST endpoints.
+- Offers a Documents API for fetching single or multiple resources.
+- Built-in support for Pagination API.
+
+## Getting Started
+
+To get the Python Server Client up and running, follow these steps:
+
+### Prerequisites
+
+Ensure you have Python and pip installed on your system. If not, follow the instructions [here](https://www.python.org/downloads/) to install Python and pip.
+
+### Installation
+
+Clone the repository using this [link](https://github.com/empress-eco/python_server_client.git). Install the Python Server Client using pip by running the following command in your terminal:
+
+```sh
+pip install py-Empress-client
 ```
-pip install py-frappe-client
-```
-
-[View on PyPi](https://pypi.org/project/py-frappe-client/)
 
 ## Usage
 
-### Token based authentication
+Here are some examples to guide you on how to use the Python Server Client:
+
+### Token-based authentication
 
 ```python
->>> from frappe_client import FrappeRequest
->>> client = FrappeRequest(url="http://localhost:8002", api_key="API_KEY", api_secret="API_SECRET")
->>> client.get("method_name")
->>> client.post("method_name")
+from Empress_client import EmpressRequest
+client = EmpressRequest(url="http://localhost:8002", api_key="API_KEY", api_secret="API_SECRET")
+client.get("method_name")
+client.post("method_name")
 ```
 
-### Session based authentication (Legacy)
-
-#### Initialize
+### Session-based authentication
 
 ```python
->>> from frappe_client import FrappeRequest
->>> client = FrappeRequest(url="http://localhost:8002", username="user", password="password")
-
->>> client.__dict__
-
-{
-   "frappe_session":<requests.sessions.Session at 0x1073fc978>,
-   "url":"http://localhost:8002",
-   "usr":"Administrator",
-   "pwd":"pass",
-   "session_data":{
-      "full_name":"Administrator",
-      "sid":"6684ed4e173094199b1cc0913d4044fdcec1d87d5d6a74a3728f229b",
-      "system_user":"yes",
-      "user_id":"Administrator",
-      "user_image":""
-   },
-   "callback": None
-}
+from Empress_client import EmpressRequest
+client = EmpressRequest(url="http://localhost:8002", username="user", password="password")
 ```
 
-#### Using Callback
+## Contributing
 
-The wrapper checks for a HTTP 403 Response from the server for the first time on every API call. If the server
-returns 403, the wrapper attempts to login again. During this login, if a `callback` function is passed by the user
-the new `session_data` is passed on to this callback parameter.
+We appreciate and welcome contributions! Here's how you can contribute:
 
-```python
-# Example Callback function
- def store_session_data(data):
-    print ("Callback function invoked with arg {}".format(data))
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
->>> client = FrappeRequest(url="http://localhost:8002", username="Administrator", password="pwd", callback=store_session_data)
-Callback function invoked with arg {'full_name': 'Administrator', 'sid': '427f585e17c551b9bf70ff64a22a6998064d0415914aaf91beb981f2', 'system_user': 'yes', 'user_id': 'Administrator', 'user_image': ''}
-```
+Your interest in making this tool better is appreciated!
 
-#### Get Session Data
+## License and Acknowledgements
 
-`client.session_data`
+### License
 
-```python
-# Example Output
->>> client.session_data
+This project is under the MIT License. Your contributions are also licensed under the MIT License.
 
->>> {
-   "full_name":"Administrator",
-   "sid":"427f585e17c551b9bf70ff64a22a6998064d0415914aaf91beb981f2",
-   "system_user":"yes",
-   "user_id":"Administrator",
-   "user_image":""
-}
-```
+### Acknowledgements
 
-#### Storing Session Data
-
-`session_data` is a `dict` object which is returned by `client.session_data` field.
-Session Data needs to be stored locally on the client's end (database/redis/file/etc).
-
-On further initializations of the FrappeRequest() class, you should pass `session_data` field
-to prevent multiple sessions for the same user.
-
-If `session_data` field is passed, all further API calls will use the same session.
-
-
-### Invoke GET Endpoint
-
-`client.get(method, params)`
-
-```python
->>> # Example Request
->>> response = client.get(method="acop_process.lead_integration.ping")
->>> response.json()
-{'message': 'PONG'}
-```
-
-
-### Invoke POST Endpoint
-
-`client.post(method, data)`
-
-```python
->>> # Example Request
->>> response = client.post(method="acop_process.lead_integration.post_ping", data={'test_param':123})
->>> response.json()
-{'message': 'POST PONG success 123'}
-```
-
-### Documents API
-
-```python
-# Fetch a single resource
->>> response = client.get_doc("Custom Doctype", name="record1")
-# Fetch multiple resources
->>> response = client.get_doc("Custom Doctype")
-# With filters, fields
->>> response = client.get_doc("Custom Doctype", fields=["field1", "field2"], filters={"field3", ["in", [1, 2, 3]]})
-# With page size, fetch 50 records at once
->>> response = client.get_doc("Custom Doctype", limit_page_length=50)
-# fetch 50 records starting from offset 50
->>> response = client.get_doc("Custom Doctype", limit_start=50, limit_page_length=50)
-# paginated generator
->>> fetch_iter = client.get_doc("Custom Doctype", limit_page_length=10, pagination=True)
->>> for records in fetch_iter:
-      print(records["data"])
-```
-
-### Pagination API
-
-```python
-# Fetch in batches of 10 records from API using a generator
->>> fetch_iter = client.get_paginated_doc("Custom Doctype", limit_page_lenth=10)
->>> for records in fetch_iter:
-      print(records["data"])
-```
-
-
+Special thanks to the Empress Community for their pioneering work and ongoing support. The innovation and dedication of the Empress Community have been instrumental in building the essential tools that power this project. We are profoundly grateful for their foundational contributions.
